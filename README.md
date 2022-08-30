@@ -1,5 +1,7 @@
 
-Simple docker compose for spinning up a portainer behind npm 
+Simple docker compose for spinning up a portainer behind npm
+
+compose file was made by taking parts from different sources
 
 you can generate certs for free with letsencrypt through npm. Just first enter the dashboard through http (port http 80 is opened by default) and set up your certs there so you get https connections
 
