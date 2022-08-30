@@ -1,0 +1,58 @@
+version: "3.3"
+services:
+    portainer:
+      image: portainer/portainer-ce:latest
+      container_name: portainer
+      restart: always
+      privileged: true
+      volumes:
+        - /data/volumes/PortainerNPM/portainer_data:/data:Z
+        - /var/run/docker.sock:/var/run/docker.sock:Z
+      networks:
+        - portainer_npm_network
+        - npm-network
+
+    npm-app:
+      image: 'jc21/nginx-proxy-manager:latest'
+      container_name: npm-app
+      restart: unless-stopped
+      ports:
+        - '80:80' # Public HTTP Port
+        - '443:443' # Public HTTPS Port
+        - '81:81' # Admin Web Port
+        # Add any other Stream port you want to expose
+        # - '21:21' # FTP
+      environment:
+        DB_MYSQL_HOST: "npm-db"
+        DB_MYSQL_PORT: 3306
+        DB_MYSQL_USER: "npm"
+        DB_MYSQL_PASSWORD: ${DB_MYSQL_PASSWORD}
+        DB_MYSQL_NAME: "npm"
+        # Uncomment the line below if IPv6 is not enabled on your host
+        # DISABLE_IPV6: 'true'
+      volumes:
+        - /data/volumes/PortainerNPM/npm-data2:/data:Z
+        - /data/volumes/PortainerNPM/letsencrypt:/etc/letsencrypt:Z
+      depends_on:
+        - npm-db
+      networks:
+        - npm-network
+        - portainer_npm_network
+
+    npm-db:
+      image: 'mariadb:latest'
+      container_name: npm-db
+      restart: unless-stopped
+      environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: 'npm'
+        MYSQL_USER: 'npm'
+        MYSQL_PASSWORD: ${DB_MYSQL_PASSWORD}
+      volumes:
+        - /data/volumes/PortainerNPM/npm-data2/mysql:/var/lib/mysql:Z
+      networks:
+        - portainer_npm_network
+networks:
+    portainer_npm_network:
+    npm-network:
+      external: true
