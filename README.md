@@ -6,4 +6,4 @@ you can generate certs for free with letsencrypt through npm. Just first enter t
 
 you probably also want to change the volumes of docker-compose
 
-note: Sorry if this readme looks so sketchy. I made this repo mostly for myself so I dont forget this conf
+note: Sorry if this readme looks so sketchy. I made this repo mostly for myself so I dont forget this conf. I might make a video tutorial at some point if someone is interested and requests it
